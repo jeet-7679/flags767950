@@ -1,0 +1,90 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Country Flag Battle</title>
+<style>
+html,body{margin:0;height:100%;background:#000;color:#fff;font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+#app{margin:0 auto;height:100%;width:min(100vw,56.25vh);font-size:min(1.8vh,3.2vw);background:#060912;display:flex;flex-direction:column;gap:.4em;padding:1.4em 1.6em;box-sizing:border-box}
+#board{border:1px solid #2a3f78;border-radius:1em;background:#0b1430;padding:.6em .9em;height:8em;box-shadow:0 0 1.5em #1b3a9a55;flex:none}
+#bt{text-align:center;font-weight:900;letter-spacing:.08em;font-size:1.3em}
+.row{display:flex;justify-content:space-between;background:#0e1a3a;border-radius:.4em;padding:.15em .6em;margin:.2em 0;font-size:.95em}.row span:first-child{color:#5b8cff;width:2.5em}.row span:nth-child(2){flex:1;text-align:center}.row b{color:#ffb020}
+#h{text-align:center;font-weight:900;letter-spacing:.12em;color:#8fa0c8;height:2.6em;flex:none}#h1{font-size:1.5em}#h1 b{color:#ffb020}#h2{font-size:.8em;letter-spacing:.2em}
+#stage{position:relative;flex:none;width:100%;aspect-ratio:1}canvas{width:100%;height:100%;display:block}
+#card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);min-width:55%;text-align:center;background:#080d1cee;border:1px solid #ffb020;border-radius:1em;padding:1em 1.4em;display:none;box-shadow:0 0 2em #000}
+.ct{font-size:1.7em;font-weight:900;color:#ffb020;letter-spacing:.08em}.fl{font-size:4.5em;line-height:1.2}.nm{font-size:1.8em;font-weight:900}.sb{color:#ffb020;font-weight:800;letter-spacing:.1em;margin-top:.3em}
+#bar{height:.4em;background:#1d2640;border-radius:1em;margin:0 3em;flex:none}#fill{height:100%;background:#ffb020;border-radius:1em;width:0}
+#left,#rd{text-align:center;color:#8fa0c8;font-weight:800;letter-spacing:.12em;flex:none}
+#strip{display:flex;flex-wrap:wrap;justify-content:center;gap:.1em;font-size:.8em;height:4.7em;overflow:hidden;opacity:.6;flex:none}
+#title{text-align:center;font-size:2em;font-weight:900;flex:none}#sub{text-align:center;color:#ffb020;font-weight:800;letter-spacing:.12em;flex:none}
+</style></head><body>
+<div id="app">
+<div id="board"><div id="bt"></div><div id="rows"></div></div>
+<div id="h"><div id="h1"></div><div id="h2"></div></div>
+<div id="stage"><canvas id="cv"></canvas><div id="card"></div></div>
+<div id="bar"><div id="fill"></div></div><div id="left"></div><div id="strip"></div><div id="rd"></div><div id="title">COUNTRY FLAG BATTLE</div><div id="sub"></div>
+</div>
+<script>
+const teams=("AF:Afghanistan,AL:Albania,DZ:Algeria,AD:Andorra,AO:Angola,AG:Antigua & Barbuda,AR:Argentina,AM:Armenia,AU:Australia,AT:Austria,AZ:Azerbaijan,BS:Bahamas,BH:Bahrain,BD:Bangladesh,BB:Barbados,BY:Belarus,BE:Belgium,BZ:Belize,BJ:Benin,BT:Bhutan,BO:Bolivia,BA:Bosnia,BW:Botswana,BR:Brazil,BN:Brunei,BG:Bulgaria,BF:Burkina Faso,BI:Burundi,CV:Cape Verde,KH:Cambodia,CM:Cameroon,CA:Canada,CF:Central African Rep,TD:Chad,CL:Chile,CN:China,CO:Colombia,KM:Comoros,CG:Congo,CD:DR Congo,CR:Costa Rica,CI:Ivory Coast,HR:Croatia,CU:Cuba,CY:Cyprus,CZ:Czechia,DK:Denmark,DJ:Djibouti,DM:Dominica,DO:Dominican Rep,EC:Ecuador,EG:Egypt,SV:El Salvador,GQ:Equatorial Guinea,ER:Eritrea,EE:Estonia,SZ:Eswatini,ET:Ethiopia,FJ:Fiji,FI:Finland,FR:France,GA:Gabon,GM:Gambia,GE:Georgia,DE:Germany,GH:Ghana,GR:Greece,GD:Grenada,GT:Guatemala,GN:Guinea,GW:Guinea-Bissau,GY:Guyana,HT:Haiti,HN:Honduras,HU:Hungary,IS:Iceland,IN:India,ID:Indonesia,IR:Iran,IQ:Iraq,IE:Ireland,IL:Israel,IT:Italy,JM:Jamaica,JP:Japan,JO:Jordan,KZ:Kazakhstan,KE:Kenya,KI:Kiribati,KW:Kuwait,KG:Kyrgyzstan,LA:Laos,LV:Latvia,LB:Lebanon,LS:Lesotho,LR:Liberia,LY:Libya,LI:Liechtenstein,LT:Lithuania,LU:Luxembourg,MG:Madagascar,MW:Malawi,MY:Malaysia,MV:Maldives,ML:Mali,MT:Malta,MH:Marshall Islands,MR:Mauritania,MU:Mauritius,MX:Mexico,FM:Micronesia,MD:Moldova,MC:Monaco,MN:Mongolia,ME:Montenegro,MA:Morocco,MZ:Mozambique,MM:Myanmar,NA:Namibia,NR:Nauru,NP:Nepal,NL:Netherlands,NZ:New Zealand,NI:Nicaragua,NE:Niger,NG:Nigeria,KP:North Korea,MK:North Macedonia,NO:Norway,OM:Oman,PK:Pakistan,PW:Palau,PS:Palestine,PA:Panama,PG:Papua New Guinea,PY:Paraguay,PE:Peru,PH:Philippines,PL:Poland,PT:Portugal,QA:Qatar,RO:Romania,RU:Russia,RW:Rwanda,KN:St Kitts & Nevis,LC:Saint Lucia,VC:St Vincent,WS:Samoa,SM:San Marino,ST:Sao Tome,SA:Saudi Arabia,SN:Senegal,RS:Serbia,SC:Seychelles,SL:Sierra Leone,SG:Singapore,SK:Slovakia,SI:Slovenia,SB:Solomon Islands,SO:Somalia,ZA:South Africa,KR:South Korea,SS:South Sudan,ES:Spain,LK:Sri Lanka,SD:Sudan,SR:Suriname,SE:Sweden,CH:Switzerland,SY:Syria,TJ:Tajikistan,TZ:Tanzania,TH:Thailand,TL:Timor-Leste,TG:Togo,TO:Tonga,TT:Trinidad & Tobago,TN:Tunisia,TR:Turkey,TM:Turkmenistan,TV:Tuvalu,UG:Uganda,UA:Ukraine,AE:UAE,GB:UK,US:USA,UY:Uruguay,UZ:Uzbekistan,VU:Vanuatu,VA:Vatican,VE:Venezuela,VN:Vietnam,YE:Yemen,ZM:Zambia,ZW:Zimbabwe").split(",").map(x=>{const[c,n]=x.split(":");return[String.fromCodePoint(...[...c].map(k=>127397+k.charCodeAt(0))),n,c,`hsl(${(c.charCodeAt(0)*37+c.charCodeAt(1)*53)%360},70%,60%)`]});
+const $=id=>document.getElementById(id),cv=$("cv"),c=cv.getContext("2d"),SPEED=+new URLSearchParams(location.search).get("speed")||1,QUAL_T=32,SPOTS=70,QUAL_TOTAL=2670,POD_T=64;
+let S=520,R=245,L=150,dpr=1,balls=[],outs=[],pool=[],qual=[],fin=[],parts=[],round=0,t=0,gt=0,ph="ready",phT=0,cardT=0,rStart=0,rot=0,sa=0;
+teams.forEach(x=>{x.img=new Image();x.img.src="https://flagcdn.com/w80/"+x[2].toLowerCase()+".png"});
+const mmss=s=>Math.max(0,Math.floor(s/60))+":"+String(Math.max(0,Math.floor(s%60))).padStart(2,"0");
+const row=(k,tm,x)=>`<div class="row"><span>#${k}</span><span>${tm[0]} ${tm[1]}</span><b>${x}</b></div>`;
+const VOICE=new URLSearchParams(location.search).get("voice")!=="0";
+function say(x){if(!VOICE||!window.speechSynthesis)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(x);u.lang="en-US";u.rate=1.05;u.pitch=.9;speechSynthesis.speak(u)}catch(e){}}
+function showCard(h,s){$("card").innerHTML=h;$("card").style.display="block";cardT=s}
+const tf=()=>{const n=balls.length;return n>20?5:n>8?8:n>2?11:16};
+function gapA(){if(ph==="ready"||ph==="podium")return 0;const f=ph==="final",o=f?tf():2.5,d=f?6:QUAL_T-2.5,q=Math.max(0,Math.min(1,(t-o)/d));return 6.283*q*q}
+function resize(){const n=$("stage").clientWidth,k=n/S;if(k!==1)for(const b of balls){b.x*=k;b.y*=k;b.vx*=k;b.vy*=k;b.r*=k;b.tr*=k}S=n;R=S*.47;L=R*.62;dpr=devicePixelRatio||1;cv.width=cv.height=S*dpr}
+function mk(list){const n=list.length,tr=Math.min(22,Math.sqrt(.4*R*R/n));rStart=n;balls=list.map(tm=>{const a=Math.random()*6.283,d=R*.85*Math.sqrt(Math.random()),v=Math.random()*6.283;return{tm,x:S/2+Math.cos(a)*d,y:S/2+Math.sin(a)*d,vx:Math.cos(v)*150,vy:Math.sin(v)*150,r:tr,tr}})}
+function newT(auto){pool=teams.slice();qual=[];fin=[];parts=[];round=0;gt=0;t=0;$("card").style.display="none";$("strip").innerHTML="";
+ if(auto)startRound();else{ph="ready";mk(pool);showCard('<div class="nm">COUNTRY FLAG BATTLE</div><div class="sb">195 flags · one winner</div><div class="ct">CLICK TO PLAY</div>',9e9)}}
+function startRound(){round++;t=0;outs=[];$("strip").innerHTML="";ph="qual";mk(pool)}
+function startFinal(){while(qual.length<SPOTS&&pool.length)qual.push(pool.splice(Math.random()*pool.length|0,1)[0]);t=0;fin=[];$("strip").innerHTML="";ph="final";mk(qual)}
+function win(w){say(w.tm[1]+" qualified");qual.push(w.tm);pool=pool.filter(x=>x!==w.tm);ph="qhold";phT=2.6;showCard(`<div class="ct">ROUND WINNER</div><div class="fl">${w.tm[0]}</div><div class="nm">${w.tm[1]}</div><div class="sb">QUALIFIED #${qual.length} / ${SPOTS}</div>`,2.6)}
+function podium(w){balls=[];ph="podium";phT=POD_T;parts=Array.from({length:130},(_,i)=>({x:Math.random()*S,y:-Math.random()*S,vx:(Math.random()-.5)*40,vy:70+Math.random()*120,c:["#ffb020","#4b8dff","#fff","#ff5c8a"][i%4]}));
+ const a=fin[fin.length-1],b=fin[fin.length-2];showCard(`<div style="font-size:3em">🏆</div><div class="ct">CHAMPION</div><div class="fl">${w.tm[0]}</div><div class="nm">${w.tm[1]}</div><div>🥈 ${a[0]} ${a[1]} · 🥉 ${b?b[0]+" "+b[1]:""}</div><div class="sb" id="nt"></div>`,9e9)}
+function exitBall(i){const b=balls.splice(i,1)[0];
+ if(ph==="qual"){outs.push(b.tm);$("strip").insertAdjacentHTML("beforeend",`<span>${b.tm[0]}</span>`);if(balls.length<=1)win(balls[0]||b)}
+ else if(ph==="final"){fin.push(b.tm);t=0;const n=balls.length;say(n<=1?`${(balls[0]||b).tm[1]} is the champion!`:`${b.tm[1]} eliminated`);
+  if(n<=1)return podium(balls[0]||b);
+  for(const x of balls){x.tr=Math.min(22,Math.sqrt(.4*R*R/n));const dx=x.x-S/2,dy=x.y-S/2,d=Math.hypot(dx,dy)||1;if(d>R*.9){x.x=S/2+dx/d*R*.8;x.y=S/2+dy/d*R*.8}}
+  showCard(`<div class="ct" style="color:#ff5c5c">ELIMINATED</div><div class="fl">${b.tm[0]}</div><div class="nm">${b.tm[1]}</div><div class="sb">${n} FLAGS LEFT</div>`,1.8)}}
+function collide(a,b){const dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||1,m=a.r+b.r;if(d>=m)return;const nx=dx/d,ny=dy/d,o=(m-d)/2;a.x-=nx*o;a.y-=ny*o;b.x+=nx*o;b.y+=ny*o;const rel=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;if(rel<0){a.vx+=nx*rel;a.vy+=ny*rel;b.vx-=nx*rel;b.vy-=ny*rel}}
+function barHit(b){const co=Math.cos(sa),si=Math.sin(sa),px=b.x-S/2,py=b.y-S/2,u=Math.max(-L,Math.min(L,px*co+py*si)),qx=co*u,qy=si*u,dx=px-qx,dy=py-qy,d=Math.hypot(dx,dy)||1,m=b.r+S*.01;
+ if(d<m){const nx=dx/d,ny=dy/d;b.x=S/2+qx+nx*m;b.y=S/2+qy+ny*m;const vn=b.vx*nx+b.vy*ny;if(vn<0){b.vx-=2*vn*nx;b.vy-=2*vn*ny}}}
+function walls(){const A=gapA();for(let i=balls.length-1;i>=0;i--){const b=balls[i],dx=b.x-S/2,dy=b.y-S/2,dd=Math.hypot(dx,dy)||1,a=((Math.atan2(dy,dx)-rot)%Math.PI+Math.PI)%Math.PI,ing=a<A/4||a>Math.PI-A/4;
+ if(dd>R+b.r*.5){exitBall(i);if(ph==="final"||ph==="podium")return}
+ else if(dd+b.r>R&&!ing){const nx=dx/dd,ny=dy/dd;b.x=S/2+nx*(R-b.r);b.y=S/2+ny*(R-b.r);const vn=b.vx*nx+b.vy*ny;if(vn>0){b.vx-=2*vn*nx;b.vy-=2*vn*ny}}}}
+function sim(dt){
+ if(ph!=="ready"&&ph!=="podium"){gt+=dt;t+=dt}rot+=dt*.5;
+ const dual=ph==="final"&&balls.length===2;if(dual)sa+=dt*.9;
+ for(const b of balls){b.x+=b.vx*dt;b.y+=b.vy*dt;b.r+=(b.tr-b.r)*Math.min(1,dt*2);const sp=Math.hypot(b.vx,b.vy);
+  if(sp<1){b.vx=90;b.vy=0}else if(sp>380||sp<90){const k=(sp>380?380:90)/sp;b.vx*=k;b.vy*=k}if(dual)barHit(b)}
+ for(let i=0;i<balls.length;i++)for(let j=i+1;j<balls.length;j++)collide(balls[i],balls[j]);
+ walls();
+ if(ph==="qual"&&t>QUAL_T+10&&balls.length>1){balls.sort((a,b)=>Math.hypot(a.x-S/2,a.y-S/2)-Math.hypot(b.x-S/2,b.y-S/2));win(balls[0])}
+ if(ph==="qhold"&&(phT-=dt)<=0)(qual.length>=SPOTS||gt>=QUAL_TOTAL)?startFinal():startRound();
+ if(ph==="podium"){for(const p of parts){p.y+=p.vy*dt;p.x+=p.vx*dt;if(p.y>S)p.y=-9}if((phT-=dt)<=0)newT(true)}}
+function draw(){c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,S,S);
+ if(ph!=="podium"){const h=gapA()/4;c.lineWidth=S*.008;c.strokeStyle="#fff";c.shadowColor="#8bb4ff";c.shadowBlur=12;c.lineCap="round";
+  if(h<1.55)for(const o of[0,Math.PI]){c.beginPath();c.arc(S/2,S/2,R,rot+o+h,rot+o+Math.PI-h);c.stroke()}c.shadowBlur=0}
+ if(ph==="final"&&balls.length===2){const x=Math.cos(sa)*L,y=Math.sin(sa)*L;c.strokeStyle="#ffb820";c.lineWidth=S*.02;c.beginPath();c.moveTo(S/2-x,S/2-y);c.lineTo(S/2+x,S/2+y);c.stroke()}
+ c.textAlign="center";c.textBaseline="middle";
+ for(const b of balls){const w=b.r*2.2,h=b.r*1.5,i=b.tm.img;if(i.complete&&i.naturalWidth)c.drawImage(i,b.x-w/2,b.y-h/2,w,h);else{c.font=b.r*1.9+"px 'Segoe UI Emoji','Apple Color Emoji',sans-serif";c.fillStyle="#fff";c.fillText(b.tm[0],b.x,b.y)}}
+ for(const p of parts){c.fillStyle=p.c;c.fillRect(p.x,p.y,5,8)}}
+function ui(){const f=ph==="final"||ph==="podium",n=balls.length;let title,rows;
+ if(f){title=n===2?"FINAL 2":"LAST FLAG STANDING";rows=balls.map(b=>qual.indexOf(b.tm)+1).sort((a,b)=>a-b).slice(0,5).map(k=>row(k,qual[k-1],"ALIVE"))}
+ else{title="QUALIFIED FOR FINAL";const s=Math.max(0,qual.length-5);rows=qual.slice(-5).map((tm,i)=>row(s+i+1,tm,"WIN"))}
+ $("bt").textContent=title;$("rows").innerHTML=rows.join("");
+ $("h1").innerHTML=f?`${title} <b>${n} FLAGS LEFT</b>`:`ELIMINATIONS IN <b>${mmss(QUAL_TOTAL-gt)}</b>`;
+ $("h2").textContent=f?"":`${qual.length} / ${SPOTS} QUALIFIED`;
+ $("fill").style.width=Math.max(0,Math.min(1,f?t/tf():1-n/(rStart||1)))*100+"%";
+ $("left").textContent=f?`${n} FLAGS LEFT`:`${n} / ${rStart} FLAGS LEFT`;
+ $("rd").textContent=f?`ROUND ${SPOTS+1-n}`:`ROUND ${round} · ${SPOTS-qual.length} SPOTS LEFT`;
+ $("sub").textContent=f?`LAST FLAG STANDING · ${n} LEFT`:`ROUND ${round} · QUALIFYING`;
+ const nt=$("nt");if(nt&&ph==="podium")nt.textContent="NEXT TOURNAMENT IN "+Math.ceil(phT)+"s"}
+let last=performance.now(),uiT=0;
+function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;const tot=raw*SPEED,n=Math.ceil(tot/.02)||1;for(let i=0;i<n;i++)sim(tot/n);
+ if(cardT>0&&ph!=="podium"&&(cardT-=tot)<=0)$("card").style.display="none";
+ draw();if(now-uiT>120){uiT=now;ui()}requestAnimationFrame(loop)}
+$("app").onclick=()=>{if(ph==="ready"){$("card").style.display="none";startRound()}};
+window.addEventListener("resize",resize);resize();newT(false);requestAnimationFrame(loop);
+</script></body></html>
